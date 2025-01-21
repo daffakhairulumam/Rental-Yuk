@@ -10,14 +10,7 @@ $koneksi = mysqli_connect("localhost", "root", "", "rental_mobil");
 $id_trans = $_GET['id_transaksi'];
 
 // Perbaikan query dengan JOIN yang benar
-$query = "SELECT d.*, m.merek, m.harga, h.total as total_transaksi, h.tanggal_transaksi, h.bayar, h.kembalian, k.nama as nama_konsumen, u.nama as nama_petugas 
-          FROM detailtrans d 
-          INNER JOIN headtrans h ON d.id_trans = h.id_trans 
-          INNER JOIN mobil m ON d.kode_mobil = m.kode_mobil 
-          INNER JOIN konsumen k ON d.kode_konsumen = k.kode_konsumen 
-          CROSS JOIN users u 
-          WHERE u.hak = 'Admin' AND d.id_trans = '$id_trans' 
-          ORDER BY d.kode_mobil ASC";
+$query = "SELECT d.*, m.merek, m.harga, h.total as total_transaksi, h.tanggal_transaksi, h.bayar, h.kembalian, k.nama as nama_konsumen, u.nama as nama_petugas FROM detailtrans d INNER JOIN headtrans h ON d.id_trans = h.id_trans INNER JOIN mobil m ON d.kode_mobil = m.kode_mobil INNER JOIN konsumen k ON d.kode_konsumen = k.kode_konsumen CROSS JOIN users u WHERE u.hak = 'Admin' AND d.id_trans = '$id_trans' ORDER BY d.kode_mobil ASC";
 
 $data = mysqli_query($koneksi, $query);
 
