@@ -15,8 +15,13 @@ $query = "SELECT d.*, m.merek, m.harga, h.total as total_transaksi, h.tanggal_tr
 $data = mysqli_query($koneksi, $query);
 
 // Jika data tidak ditemukan
-if (mysqli_num_rows($data) == 0) {
-    die("Data tidak ditemukan");
+if (mysqli_num_rows($data) == 0) { ?>
+    <script>
+        alert("Data Tidak Ditemukan");
+        window.location = '../../index.php?page=transaksi';
+    </script>
+<?php
+    exit();
 }
 
 $pdf = new FPDF('P', 'mm', array(85, 150));
@@ -31,7 +36,7 @@ $pdf->Cell(0, 3, 'Jl. Gunung Batu', 0, 1, 'C');
 $row = mysqli_fetch_array($data);
 $pdf->SetFont('Arial', 'B', 5);
 $pdf->Cell(0, 3, 'Id Transaksi : ' . $row['id_trans'], 0, 1, 'L');
-$pdf->Cell(0, 3, 'Tanggal Transaksi : ' . date('Y-m-d', strtotime($row['tanggal_transaksi'])), 0, 1, 'L');
+$pdf->Cell(0, 3, 'Tanggal Transaksi : ' . date('d F Y', strtotime($row['tanggal_transaksi'])), 0, 1, 'L');
 $pdf->Cell(0, 3, 'Nama Konsumen : ' . $row['nama_konsumen'], 0, 1, 'L');
 
 $pdf->SetFont('Arial', 'B', 5);
@@ -70,13 +75,13 @@ foreach ($data as $key => $value) {
 $pdf->SetFont('Arial', 'B', 5);
 $xPosition = 19;
 $pdf->SetXY($xPosition, $pdf->GetY());
-$pdf->Cell(65, 3, 'Total: Rp ' . number_format($totalTransaksi, 0, ',', '.'), 0, 1, 'R');
+$pdf->Cell(65, 3, 'Total: Rp. ' . number_format($totalTransaksi, 0, ',', '.'), 0, 1, 'R');
 
 $pdf->SetXY($xPosition, $pdf->GetY());
-$pdf->Cell(65, 3, 'Bayar: Rp ' . number_format($bayar, 0, ',', '.'), 0, 1, 'R');
+$pdf->Cell(65, 3, 'Bayar: Rp. ' . number_format($bayar, 0, ',', '.'), 0, 1, 'R');
 
 $pdf->SetXY($xPosition, $pdf->GetY());
-$pdf->Cell(65, 3, 'Kembalian: Rp ' . number_format($kembalian, 0, ',', '.'), 0, 1, 'R');
+$pdf->Cell(65, 3, 'Kembalian: Rp. ' . number_format($kembalian, 0, ',', '.'), 0, 1, 'R');
 
 $pdf->SetFont('Arial', '', 5);
 $pdf->Cell(0, 3, 'Dicetak Oleh : ' . $nama_petugas, 0, 1, 'C');

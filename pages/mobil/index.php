@@ -30,6 +30,7 @@
                         <table class="table table-bordered" id="table-mobil">
                             <thead>
                                 <tr>
+                                    <th>No.</th>
                                     <th>Kode Mobil</th>
                                     <th>No Polisi</th>
                                     <th>Merek</th>
@@ -51,6 +52,7 @@
 
                                 foreach ($data as $key => $value) { ?>
                                     <tr>
+                                        <td><?= $key + 1 ?></td>
                                         <td><?= $value['kode_mobil'] ?></td>
                                         <td><?= $value['no_polisi'] ?></td>
                                         <td><?= $value['merek'] ?></td>

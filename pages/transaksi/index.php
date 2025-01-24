@@ -103,16 +103,15 @@ function getKodeKonsumen($idTransaksi)
                                             $result = mysqli_query($koneksi, $sql);
 
                                             while ($row = mysqli_fetch_assoc($result)) {
-                                                $disabled = ($row['status'] === 'Sedang Di Sewa' || $row['status'] === 'Sedang Di Pakai') ? 'disabled' : '';
-                                            ?>
+                                                $disabled = ($row['status'] === 'Disewa') ? 'disabled' : '';                                            ?>
                                                 <option
                                                     value="<?= $row['kode_mobil'] ?>"
                                                     data-image="<?= $row['images'] ?>"
                                                     data-merek="<?= $row['merek'] ?>"
-                                                    data-harga="<?= $row['harga'] ?>"
+                                                    data-harga="<?= number_format($row['harga'], 0, ',', '.') ?>"
                                                     data-status="<?= $row['status'] ?>"
                                                     <?= $disabled ?>>
-                                                    <?= $row['kode_mobil'] ?> <?= $row['merek'] ?> || Rp.<?= $row['harga'] ?> (<?= $row['status'] ?>)
+                                                    <?= $row['kode_mobil'] ?> <?= $row['merek'] ?> || Rp.<?= number_format($row['harga'], 0, ',', '.') ?> (<?= $row['status'] ?>)
                                                 </option>
                                             <?php }
                                             ?>
@@ -245,7 +244,7 @@ function getKodeKonsumen($idTransaksi)
                             <div class="col-lg-2 mt-2">
                                 <div class="input-group">
                                     <a href="logic/transaksi/cetak.php?id_transaksi=<?= $idTransaksiPrevous ?>" target="_blank">
-                                        <button class="btn btn-primary" type="button" id="cetak-struk" <?= $disabledCetak ?>>Cetak Struk <?= $idTransaksiPrevous ?></button>
+                                        <button class="btn btn-primary" type="button" id="cetak-struk">Cetak Struk <?= $idTransaksiPrevous ?></button>
                                     </a>
                                 </div>
                             </div>

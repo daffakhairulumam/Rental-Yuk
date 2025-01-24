@@ -36,8 +36,13 @@ $data = mysqli_fetch_array($result);
                             </div>
 
                             <div class="form-group mb-3">
-                                <label>NIK</label>
+                                <label>Kode Konsumen</label>
                                 <input type="text" name="kode_konsumen" placeholder="Input Kode Konsumen" class="form-control" value="<?= $data['kode_konsumen'] ?>">
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label>Email</label>
+                                <input type="text" name="email" placeholder="Input Email" class="form-control" value="<?= $data['email'] ?>">
                             </div>
 
                             <div class="form-group mb-3">

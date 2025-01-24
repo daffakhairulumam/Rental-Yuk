@@ -21,7 +21,7 @@ $query2 = "INSERT INTO detailtrans (id, id_trans, kode_konsumen, kode_mobil, no_
 $result2 = mysqli_query($koneksi, $query2);
 
 // Update status mobil menjadi "Sedang Di Sewa"
-$query3 = "UPDATE mobil SET status = 'Sedang Di Sewa' WHERE kode_mobil IN (SELECT kode_mobil FROM pesanan)";
+$query3 = "UPDATE mobil SET status = 'Disewa' WHERE kode_mobil IN (SELECT kode_mobil FROM pesanan)";
 
 $result3 = mysqli_query($koneksi, $query3);
 

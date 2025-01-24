@@ -23,8 +23,8 @@ function getStatusMobil()
 {
     $conn = mysqli_connect("localhost", "root", "", "rental_mobil");
 
-    $disewa = mysqli_query($conn, "SELECT COUNT(*) as total FROM mobil WHERE status = 'Sedang Di Sewa'")->fetch_assoc();
-    $tersedia = mysqli_query($conn, "SELECT COUNT(*) as total FROM mobil WHERE status != 'Sedang Di Sewa'")->fetch_assoc();
+    $disewa = mysqli_query($conn, "SELECT COUNT(*) as total FROM mobil WHERE status = 'Disewa'")->fetch_assoc();
+    $tersedia = mysqli_query($conn, "SELECT COUNT(*) as total FROM mobil WHERE status != 'Disewa'")->fetch_assoc();
 
     return [
         'disewa' => $disewa['total'],

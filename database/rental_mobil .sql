@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 20, 2025 at 09:08 AM
+-- Generation Time: Jan 23, 2025 at 03:05 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -44,12 +44,11 @@ CREATE TABLE `detailtrans` (
 --
 
 INSERT INTO `detailtrans` (`id`, `id_trans`, `kode_konsumen`, `kode_mobil`, `no_polisi`, `tgl_pinjam`, `tgl_kembali`, `harga`, `subtotal`) VALUES
-(37, 'TRX001', 'KSN001', 'MBL001', 'D 5050 SBF', '2025-01-17', '2025-01-18', '350000000', '350000000'),
-(38, 'TRX002', 'KSN002', 'MBL002', 'D 5040 SBF', '2025-01-17', '2025-01-19', '350000000', '700000000'),
-(39, 'TRX003', 'KSN003', 'MBL004', 'D 4550 SBF', '2025-01-17', '2025-01-19', '350000000', '700000000'),
-(40, 'TRX004', 'KSN003', 'MBL004', 'D 8172 SBF', '2025-01-20', '2025-01-25', '25000000000', '125000000000'),
-(41, 'TRX004', 'KSN003', 'MBL002', 'D 9257 SBF', '2025-01-25', '2025-01-27', '1400000000', '2800000000'),
-(43, 'TRX005', 'KSN003', 'MBL005', 'D 8500 SBF', '2025-01-20', '2025-01-27', '138000000', '966000000');
+(55, 'TRX001', 'KSN003', 'MBL001', 'D 9783 SBF', '2025-01-22', '2025-01-25', '3500000000', '10500000000'),
+(56, 'TRX001', 'KSN003', 'MBL005', 'D 4592 SBF', '2025-01-26', '2025-01-31', '350000000', '1750000000'),
+(58, 'TRX002', 'KSN003', 'MBL002', 'D 9364 SBF', '2025-02-01', '2025-02-05', '2700000000', '10800000000'),
+(59, 'TRX002', 'KSN003', 'MBL003', 'D 4970 SBF', '2025-02-05', '2025-02-10', '3700000000', '18500000000'),
+(60, 'TRX002', 'KSN003', 'MBL004', 'D 8918 SBF', '2025-02-10', '2025-02-15', '4250000000', '21250000000');
 
 -- --------------------------------------------------------
 
@@ -70,11 +69,8 @@ CREATE TABLE `headtrans` (
 --
 
 INSERT INTO `headtrans` (`id_trans`, `tanggal_transaksi`, `total`, `bayar`, `kembalian`) VALUES
-('TRX001', '2025-01-17', '350000000', '500000000', '150000000'),
-('TRX002', '2025-01-17', '700000000', '1000000000', '300000000'),
-('TRX003', '2025-01-17', '700000000', '1000000000', '300000000'),
-('TRX004', '2025-01-20', '127800000000', '300000000000', '172200000000'),
-('TRX005', '2025-01-20', '966000000', '1000000000', '34000000');
+('TRX001', '2025-01-22', '12250000000', '15000000000', '2750000000'),
+('TRX002', '2025-01-22', '50550000000', '70000000000', '19450000000');
 
 -- --------------------------------------------------------
 
@@ -123,11 +119,11 @@ CREATE TABLE `mobil` (
 --
 
 INSERT INTO `mobil` (`id`, `kode_mobil`, `no_polisi`, `merek`, `harga`, `warna`, `status`, `images`) VALUES
-(69, 'MBL001', 'D 4607 SBF', 'Nissan GT-R Nismo', '5300000000', 'Abu - Abu', 'Tersedia', '606437956_gtr.jpg'),
-(70, 'MBL002', 'D 9257 SBF', 'Supra MK4', '1400000000', 'Putih', 'Sedang Di Sewa', '576944530_supra.jpg'),
-(71, 'MBL003', 'D 6814 SBF', 'Nissan Silvia S15', '500000000', 'Kunig', 'Tersedia', '921388783_silvia.jpg'),
-(72, 'MBL004', 'D 8172 SBF', 'Nissan Skyline R34', '25000000000', 'Biru', 'Sedang Di Sewa', '828947654_r34.jpg'),
-(73, 'MBL005', 'D 8500 SBF', 'Mazda RX-7', '138000000', 'Orange', 'Sedang Di Sewa', '628027974_rx7.jpg');
+(75, 'MBL001', 'D 9783 SBF', 'Nissan GT-R Nismo', '3500000000', 'Abu - Abu', 'Disewa', '657588882_gtr.jpg'),
+(76, 'MBL002', 'D 9364 SBF', 'Nissan Skyline R34', '2700000000', 'Metalic', 'Disewa', '1613806812_r34.jpg'),
+(77, 'MBL003', 'D 4970 SBF', 'Supra MK4', '3700000000', 'Putih', 'Disewa', '856492692_supra.jpg'),
+(78, 'MBL004', 'D 8918 SBF', 'Mazda RX-7', '4250000000', 'Orange', 'Disewa', '817564249_rx7.jpg'),
+(79, 'MBL005', 'D 4592 SBF', 'Nissan Silvia S15', '350000000', 'Kunig', 'Disewa', '2115074245_silvia.jpg');
 
 -- --------------------------------------------------------
 
@@ -219,7 +215,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `detailtrans`
 --
 ALTER TABLE `detailtrans`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `konsumen`
@@ -231,7 +227,7 @@ ALTER TABLE `konsumen`
 -- AUTO_INCREMENT for table `mobil`
 --
 ALTER TABLE `mobil`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
 
 --
 -- AUTO_INCREMENT for table `pesanan`

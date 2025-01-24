@@ -65,7 +65,7 @@ $data = mysqli_fetch_array($result);
                                 <select class="form-control" name="status">
                                     <option value="<?= $data['status'] ?>">--Pilih--</option>
                                     <option value="Tersedia">Tersedia</option>
-                                    <option value="Sedang Di Sewa">Sedang Di Sewa</option>
+                                    <option value="Disewa">Sedang Di Sewa</option>
                                 </select>
                             </div>
 

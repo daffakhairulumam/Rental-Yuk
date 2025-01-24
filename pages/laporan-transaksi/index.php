@@ -1,18 +1,17 @@
 <?php
-include('./config/koneksi.php');
+include './config/koneksi.php';
 
-// Ambil nilai ID Transaksi dari query string jika ada
-$idTransaksi = isset($_GET['id_transaksi']) ? $_GET['id_transaksi'] : null;
-$data = getTransaksi($idTransaksi);
+// Get transaction data
+$data = getTransaksi();
 
 function getTransaksi($idTransaksi = null)
 {
     $conn = mysqli_connect("localhost", "root", "", "rental_mobil");
 
     if ($idTransaksi) {
-        $query = "SELECT headtrans.id_trans, headtrans.tanggal_transaksi, mobil.kode_mobil, mobil.merek, detailtrans.no_polisi, detailtrans.tgl_pinjam, detailtrans.tgl_kembali, detailtrans.harga, headtrans.total FROM headtrans INNER JOIN detailtrans ON headtrans.id_trans = detailtrans.id_trans INNER JOIN mobil ON detailtrans.kode_mobil = mobil.kode_mobil WHERE headtrans.id_trans = '$idTransaksi'";
+        $query = "SELECT headtrans.id_trans, headtrans.tanggal_transaksi, GROUP_CONCAT(detailtrans.kode_mobil SEPARATOR ', ') AS kode_mobil, GROUP_CONCAT(mobil.merek SEPARATOR ', ') AS merek, GROUP_CONCAT(mobil.warna SEPARATOR ', ') AS warna, GROUP_CONCAT(mobil.status SEPARATOR ', ') AS status, GROUP_CONCAT(mobil.images SEPARATOR ', ') AS images, GROUP_CONCAT(detailtrans.no_polisi SEPARATOR ', ') AS no_polisi, GROUP_CONCAT(detailtrans.tgl_pinjam SEPARATOR ', ') AS tgl_pinjam, GROUP_CONCAT(detailtrans.tgl_kembali SEPARATOR ', ') AS tgl_kembali, GROUP_CONCAT(detailtrans.harga SEPARATOR ', ') AS harga_mobil, headtrans.total, konsumen.kode_konsumen, konsumen.email, konsumen.nama, konsumen.nik, konsumen.jenis_kelamin, konsumen.alamat, konsumen.telp FROM headtrans INNER JOIN detailtrans ON headtrans.id_trans = detailtrans.id_trans INNER JOIN mobil ON detailtrans.kode_mobil = mobil.kode_mobil INNER JOIN konsumen ON detailtrans.kode_konsumen = konsumen.kode_konsumen WHERE headtrans.id_trans = '$idTransaksi' GROUP BY headtrans.id_trans";
     } else {
-        $query = "SELECT * FROM headtrans";
+        $query = "SELECT headtrans.id_trans, headtrans.tanggal_transaksi, GROUP_CONCAT(detailtrans.kode_mobil SEPARATOR ', ') AS kode_mobil, GROUP_CONCAT(mobil.merek SEPARATOR ', ') AS merek, GROUP_CONCAT(mobil.warna SEPARATOR ', ') AS warna, GROUP_CONCAT(mobil.status SEPARATOR ', ') AS status, GROUP_CONCAT(mobil.images SEPARATOR ', ') AS images, GROUP_CONCAT(detailtrans.no_polisi SEPARATOR ', ') AS no_polisi, GROUP_CONCAT(detailtrans.tgl_pinjam SEPARATOR ', ') AS tgl_pinjam, GROUP_CONCAT(detailtrans.tgl_kembali SEPARATOR ', ') AS tgl_kembali, GROUP_CONCAT(detailtrans.harga SEPARATOR ', ') AS harga_mobil, headtrans.total, konsumen.kode_konsumen, konsumen.email, konsumen.nama, konsumen.nik, konsumen.jenis_kelamin, konsumen.alamat, konsumen.telp FROM headtrans INNER JOIN detailtrans ON headtrans.id_trans = detailtrans.id_trans INNER JOIN mobil ON detailtrans.kode_mobil = mobil.kode_mobil INNER JOIN konsumen ON detailtrans.kode_konsumen = konsumen.kode_konsumen GROUP BY headtrans.id_trans";
     }
 
     $result = mysqli_query($conn, $query);
@@ -28,6 +27,41 @@ function getTransaksi($idTransaksi = null)
 }
 ?>
 
+<style>
+    .konsumen-detail,
+    .mobil-detail {
+        color: black !important;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .konsumen-detail:hover,
+    .mobil-detail:hover {
+        color: #444 !important;
+    }
+
+    .car-details {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+
+    .car-image img {
+        height: 300px;
+        object-fit: cover;
+        width: 100%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .gap-3 {
+        gap: 1rem;
+    }
+
+    #mobilModal .modal-lg {
+        max-width: 800px;
+    }
+</style>
 
 <main id="main" class="main">
 
@@ -35,7 +69,7 @@ function getTransaksi($idTransaksi = null)
         <h1>Laporan Transaksi</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item"><a href="index.php">Home</a></li>
                 <li class="breadcrumb-item active">Laporan Transaksi</li>
             </ol>
         </nav>
@@ -51,7 +85,7 @@ function getTransaksi($idTransaksi = null)
 
                         <div class="row mb-3">
                             <div class="col-md-3">
-                                <label class="form-label">Tanggal Awal</label>
+                                <label class="form-label">Tanggal Awal</label> 
                                 <input type="date" id="min" name="min" class="form-control">
                             </div>
                             <div class="col-md-3">
@@ -75,30 +109,74 @@ function getTransaksi($idTransaksi = null)
                                 <tr>
                                     <th>No.</th>
                                     <th>ID Transaksi</th>
+                                    <th>Kode Konsumen</th>
+                                    <th>Nama Konsumen</th>
+                                    <th>Kode Mobil</th>
+                                    <th>No Polisi</th>
+                                    <!-- <th>Nama Mobil</th> -->
+                                    <th>Tanggal Transaksi</th>
                                     <!-- <th>Tanggal Pinjam</th>
                                     <th>Tanggal Kembali</th> -->
+                                    <th>Harga Mobil</th>
                                     <th>Total</th>
-                                    <th>Tanggal Transaksi</th>
-                                    <th>Action</th>
+                                    <!-- <th>Action</th> -->
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                foreach ($data as $key => $value) { ?>
+                                foreach ($data as $key => $value) {
+
+                                    $hargaMobilArray = explode(', ', $value['harga_mobil']);
+
+                                    // Create a formatted list of prices
+                                    $hargaMobilFormatted = implode(', ', array_map(function ($harga) {
+                                        return 'Rp. ' . number_format((float)$harga, 0, ',', '.');
+                                    }, $hargaMobilArray));
+                                ?>
                                     <tr>
                                         <td><?= $key + 1 ?></td>
                                         <td><?= $value['id_trans'] ?></td>
+                                        <td>
+                                            <a href="#" class="konsumen-detail"
+                                                data-kode="<?= $value['kode_konsumen'] ?>"
+                                                data-email="<?= $value['email'] ?>"
+                                                data-nama="<?= $value['nama'] ?>"
+                                                data-nik="<?= $value['nik'] ?>"
+                                                data-jk="<?= $value['jenis_kelamin'] ?>"
+                                                data-alamat="<?= $value['alamat'] ?>"
+                                                data-telp="<?= $value['telp'] ?>"><?= $value['kode_konsumen'] ?>
+                                            </a>
+                                        </td>
+                                        <td><?= $value['nama'] ?></td>
+                                        <td>
+                                            <a href="#" class="mobil-detail"
+                                                data-kode="<?= $value['kode_mobil'] ?>"
+                                                data-no="<?= $value['no_polisi'] ?>"
+                                                data-merek="<?= $value['merek'] ?>"
+                                                data-warna="<?= ($value['warna'] ?? '') ?>"
+                                                data-harga="<?= $hargaMobilFormatted ?>"
+                                                data-pinjam="<?= $value['tgl_pinjam'] ?>"
+                                                data-kembali="<?= $value['tgl_kembali'] ?>"
+                                                data-status="<?= ($value['status'] ?? '') ?>"
+                                                data-images="<?= ($value['images'] ?? '') ?>">
+                                                <?= $value['kode_mobil'] ?>
+                                            </a>
+                                        </td>
+                                        <td><?= $value['no_polisi'] ?></td>
+                                        <!-- <td><?= $value['merek'] ?></td> -->
+                                        <td><?= $value['tanggal_transaksi'] ?></td>
                                         <!-- <td><?= $value['tgl_pinjam'] ?></td>
                                         <td><?= $value['tgl_kembali'] ?></td> -->
-                                        <td><?= number_format($value['total'], 0, ',', '.') ?></td>
-                                        <td><?= $value['tanggal_transaksi'] ?></td>
-                                        <td>
+                                        <td><?= $hargaMobilFormatted ?></td>
+                                        <!-- <td>Rp. <?= number_format((float)$value['harga'], 0, ',', '.') ?></td> -->
+                                        <td>Rp. <?= number_format((float)$value['total'], 0, ',', '.') ?></td>
+                                        <!-- <td>
                                             <a href="index.php?page=laporan-transaksi/detail&id_transaksi=<?= $value['id_trans'] ?>">
                                                 <button type="button" class="btn btn-primary">
                                                     <i class="bi bi-eye"></i>
                                                 </button>
                                             </a>
-                                        </td>
+                                        </td> -->
                                     </tr>
                                 <?php } ?>
                             </tbody>
@@ -114,64 +192,109 @@ function getTransaksi($idTransaksi = null)
 
 </main><!-- End #main -->
 
+<!-- Modal Konsumen -->
+<div class="modal fade" id="konsumenModal" tabindex="-1" aria-labelledby="konsumenModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="konsumenModalLabel">Detail Konsumen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <tr>
+                        <th>Kode Konsumen</th>
+                        <td id="modalKodeKonsumen"></td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td id="modalEmail"></td>
+                    <tr>
+                        <th>NIK</th>
+                        <td id="modalNik"></td>
+                    </tr>
+                    <tr>
+                        <th>Nama</th>
+                        <td id="modalNama"></td>
+                    </tr>
+                    <tr>
+                        <th>Jenis Kelamin</th>
+                        <td id="modalJenisKelamin"></td>
+                    </tr>
+                    <tr>
+                        <th>Alamat</th>
+                        <td id="modalAlamat"></td>
+                    </tr>
+                    <tr>
+                        <th>Telepon</th>
+                        <td id="modalTelp"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal Konsumen -->
+
+<!-- Modal Mobil -->
+<div class="modal fade" id="mobilModal" tabindex="-1" aria-labelledby="mobilModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mobilModalLabel">Detail Mobil</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Container for car details -->
+                <div id="carDetailsContainer"></div>
+
+                <!-- Container for images -->
+                <div class="mt-4">
+                    <h6 class="mb-3"></h6>
+                    <div id="modalImages"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     $(document).ready(function() {
         // Initialize DataTable with date sorting
         var table = $('#table-transaksi').DataTable({
             columnDefs: [{
-                // Target the date column (index 3 - Tanggal Transaksi)
-                targets: 3,
-                render: function(data, type, row) {
-                    // For sorting/filtering, convert to YYYY-MM-DD format
-                    if (type === 'sort' || type === 'filter') {
-                        var dateParts = data.split('-');
-                        if (dateParts.length === 3) {
-                            return dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
-                        }
-                        return data;
-                    }
-                    // For display, keep original format
-                    return data;
-                }
+                // Target the date column (index 5 - Tanggal Transaksi)
+                targets: 5,
+                type: 'date-dd-mm-yyyy'
             }]
         });
 
         // Custom date range filtering function
         $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-            var min = $('#min').val();
-            var max = $('#max').val();
+            var min = $('#min').val() ? moment($('#min').val(), 'YYYY-MM-DD') : null;
+            var max = $('#max').val() ? moment($('#max').val(), 'YYYY-MM-DD') : null;
+
+            // Parse the date from the table (DD-MM-YYYY format)
+            var dateStr = data[5];
+            var date = moment(dateStr, 'DD-MM-YYYY');
 
             // If no filter is set, show all rows
-            if (!min && !max) {
+            if ((!min && !max) || !date.isValid()) {
                 return true;
             }
 
-            // Get date from the correct column (index 3 - Tanggal Transaksi)
-            var dateStr = data[3];
-
-            // Convert date string to Date object (assuming DD-MM-YYYY format)
-            var dateParts = dateStr.split('-');
-            var date = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
-
-            // Validate date
-            if (!isNaN(date.getTime())) {
-                // Convert min date
-                if (min) {
-                    var minDate = new Date(min);
-                    minDate.setHours(0, 0, 0, 0);
-                    if (date < minDate) {
-                        return false;
-                    }
-                }
-
-                // Convert max date
-                if (max) {
-                    var maxDate = new Date(max);
-                    maxDate.setHours(23, 59, 59, 999);
-                    if (date > maxDate) {
-                        return false;
-                    }
-                }
+            // Check if date is within the selected range
+            if (min && !date.isSameOrAfter(min)) {
+                return false;
+            }
+            if (max && !date.isSameOrBefore(max)) {
+                return false;
             }
 
             return true;
@@ -187,6 +310,117 @@ function getTransaksi($idTransaksi = null)
             $('#min').val('');
             $('#max').val('');
             table.draw();
+        });
+
+        // Handle click on customer code
+        $('.konsumen-detail').click(function(e) {
+            e.preventDefault();
+            var kode = $(this).data('kode');
+            var email = $(this).data('email');
+            var nama = $(this).data('nama');
+            var nik = $(this).data('nik');
+            var jk = $(this).data('jk');
+            var alamat = $(this).data('alamat');
+            var telp = $(this).data('telp');
+
+            // Set modal content
+            $('#modalKodeKonsumen').text(kode);
+            $('#modalEmail').text(email);
+            $('#modalNik').text(nik);
+            $('#modalNama').text(nama);
+            $('#modalJenisKelamin').text(jk);
+            $('#modalAlamat').text(alamat);
+            $('#modalTelp').text(telp);
+
+            // Show modal
+            $('#konsumenModal').modal('show');
+        });
+
+        // Handle click on car code
+        $('.mobil-detail').click(function(e) {
+            e.preventDefault();
+            var kode = $(this).data('kode');
+            var merek = $(this).data('merek');
+            var warna = $(this).data('warna');
+            var harga = $(this).data('harga');
+            var pinjam = $(this).data('pinjam');
+            var kembali = $(this).data('kembali');
+            var status = $(this).data('status');
+            var noPolisi = $(this).data('no');
+            var images = $(this).data('images');
+
+            // Split values if they contain commas
+            var kodeArray = kode.split(', ');
+            var merekArray = merek.split(', ');
+            var warnaArray = warna ? warna.split(', ') : [];
+            var hargaArray = harga ? harga.split(', ') : [];
+            var pinjamArray = pinjam ? pinjam.split(', ') : [];
+            var kembaliArray = kembali ? kembali.split(', ') : [];
+            var statusArray = status ? status.split(', ') : [];
+            var noPolisiArray = noPolisi.split(', ');
+            var imagesArray = images ? images.split(', ') : [];
+
+            // Clear previous content
+            $('#carDetailsContainer').empty();
+
+            // Create content for each car
+            var contentHtml = '';
+            for (let i = 0; i < kodeArray.length; i++) {
+                contentHtml += `
+        <div class="car-details mb-4 row ${i !== 0 ? 'border-top pt-4' : ''}">
+            <div class="col-md-8">
+                <h6 class="text-primary">Mobil ${i + 1}</h6>
+                <div class="row mb-2">
+                    <div class="col-5"><strong>Kode Mobil:</strong></div>
+                    <div class="col-7">${kodeArray[i]}</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-5"><strong>Nama Mobil:</strong></div>
+                    <div class="col-7">${merekArray[i]}</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-5"><strong>No Polisi:</strong></div>
+                    <div class="col-7">${noPolisiArray[i]}</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-5"><strong>Warna:</strong></div>
+                    <div class="col-7">${warnaArray[i] || 'Tidak tersedia'}</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-5"><strong>Harga:</strong></div>
+                    <div class="col-7">${hargaArray[i] || 'Tidak tersedia'}</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-5"><strong>Tanggal Pinjam:</strong></div>
+                    <div class="col-7">${pinjamArray[i] || 'Tidak tersedia'}</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-5"><strong>Tanggal Kembali:</strong></div>
+                    <div class="col-7">${kembaliArray[i] || 'Tidak tersedia'}</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-5"><strong>Status:</strong></div>
+                    <div class="col-7">${statusArray[i] || 'Tidak tersedia'}</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                ${imagesArray[i] && imagesArray[i].trim() !== '' ? `
+                <img src="public/img/product/${imagesArray[i].trim()}" 
+                     alt="${merekArray[i]}" 
+                     class="img-fluid rounded"
+                     style="width: 100%; height: 250px; object-fit: cover;">
+                     <i><p class="text-center mt-2"><small>Gambar Mobil</small></p></i>
+                     <p class="text-center mt-2"><small>${merekArray[i]}</small></p>
+                ` : ''}
+            </div>
+        </div>`;
+            }
+
+            // Display car details
+            $('#carDetailsContainer').html(contentHtml);
+
+            // Show modal
+            $('#mobilModal').modal('show');
         });
     });
 </script>

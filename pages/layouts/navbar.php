@@ -2,7 +2,7 @@
 <header id="header" class="header fixed-top d-flex align-items-center">
 
   <div class="d-flex align-items-center justify-content-between">
-    <a href="index.html" class="logo d-flex align-items-center">
+    <a href="index.php" class="logo d-flex align-items-center">
       <img src="assets/img/rental-yuk-icon.png" alt="icon">
       <span class="d-none d-lg-block">Rental-Yuk</span>
     </a>

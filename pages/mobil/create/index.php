@@ -117,7 +117,7 @@ function generateNoPol()
                                 <select class="form-control" name="status">
                                     <option>--Pilih--</option>
                                     <option value="Tersedia">Tersedia</option>
-                                    <option value="Sedang Di Sewa">Sedang Di Sewa</option>
+                                    <option value="Disewa">Disewa</option>
                                 </select>
                             </div>
 

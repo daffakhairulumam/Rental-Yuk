@@ -49,6 +49,11 @@ function genereteCodeKonsumen()
                             </div>
 
                             <div class="form-group mb-3">
+                                <label>Email</label>
+                                <input type="text" name="email" placeholder="Input Email" class="form-control">
+                            </div>
+
+                            <div class="form-group mb-3">
                                 <label>NIK</label>
                                 <input type="text" name="nik" placeholder="Input NIK" class="form-control">
                             </div>
