@@ -96,9 +96,8 @@ function generateNoPol()
                                 <input type="text" name="no" placeholder="Input No Polisi" class="form-control" value="<?= $NoPol ?>" readonly>
                             </div>
 
-                            <!-- Form fields lainnya tetap sama -->
                             <div class="form-group mb-3">
-                                <label>Merek</label>
+                                <label>Nama Mobil</label>
                                 <input type="text" name="merek" placeholder="Input Nama Merek" class="form-control">
                             </div>
 

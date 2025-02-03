@@ -200,7 +200,7 @@ function getKodeKonsumen($idTransaksi)
                                         <td>
                                             <img src="public/img/product/<?= $value['images'] ?>" width="100px">
                                         <td>
-                                            <button type="button" class="btn btn-primary" onclick="modalMasa(<?= $value['id'] ?>, '<?= $value['id_transaksi'] ?>', '<?= $value['kode_mobil'] ?>', '<?= $value['tgl_pinjam'] ?>', '<?= $value['tgl_kembali'] ?>')">
+                                            <button type="button" class="btn btn-primary" onclick="modalSewa(<?= $value['id'] ?>, '<?= $value['id_transaksi'] ?>', '<?= $value['kode_mobil'] ?>', '<?= $value['tgl_pinjam'] ?>', '<?= $value['tgl_kembali'] ?>')">
                                                 Update Masa Sewa
                                             </button>
                                             <p></p>
@@ -238,13 +238,13 @@ function getKodeKonsumen($idTransaksi)
                             </div>
                             <div class="col-lg-3">
                                 <div class="input-group">
-                                    <button class="btn btn-primary" type="button" onclick="MyFunction()">Bayar</button>
+                                    <button class="btn btn-primary" type="button" onclick="bayar()">Bayar</button>
                                 </div>
                             </div>
                             <div class="col-lg-2 mt-2">
                                 <div class="input-group">
                                     <a href="logic/transaksi/cetak.php?id_transaksi=<?= $idTransaksiPrevous ?>" target="_blank">
-                                        <button class="btn btn-primary" type="button" id="cetak-struk">Cetak Struk <?= $idTransaksiPrevous ?></button>
+                                        <button class="btn btn-primary" type="button" id="cetak-struk" <?= $disabledCetak ?>>Cetak Struk <?= $idTransaksiPrevous ?></button>
                                     </a>
                                 </div>
                             </div>
@@ -297,12 +297,12 @@ function getKodeKonsumen($idTransaksi)
     </div>
     <!-- End Modal Bayar -->
 
-    <!-- Modal Qty -->
-    <div class="modal fade" id="modalMasa" tabindex="-1">
+    <!-- Modal Sewa  -->
+    <div class="modal fade" id="modalSewa" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Qty</h5>
+                    <h5 class="modal-title">Tambah Masa Sewa</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -345,7 +345,7 @@ function getKodeKonsumen($idTransaksi)
         $('#kembalian').val(kembalian);
     }
 
-    function MyFunction() {
+    function bayar() {
         var bayar = $('#bayar').val();
         var total = $('#total').val().replace(/[^0-9]/g, ''); // Remove non-numeric characters
         var idTransaksi = $('#id_transaksi').val();
@@ -369,8 +369,8 @@ function getKodeKonsumen($idTransaksi)
         $('#kembalian2').val(kembalian);
     }
 
-    function modalMasa(id, id_transaksi, kode_mobil, tgl_pinjam, tgl_kembali) {
-        $('#modalMasa').modal('show');
+    function modalSewa(id, id_transaksi, kode_mobil, tgl_pinjam, tgl_kembali) {
+        $('#modalSewa').modal('show');
         $('#modal-id').val(id);
         $('#modal-id_transaksi').val(id_transaksi);
         $('#modal-kode_mobil').val(kode_mobil);

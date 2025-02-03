@@ -33,7 +33,7 @@
                                     <th>No.</th>
                                     <th>Kode Mobil</th>
                                     <th>No Polisi</th>
-                                    <th>Merek</th>
+                                    <th>Nama Mobil</th>
                                     <th>Harga</th>
                                     <th>Warna</th>
                                     <th>Status</th>
@@ -66,9 +66,12 @@
                                                 <span class="badge bg-danger"><?= $value['status'] ?></span>
                                             <?php } ?>
                                         </td>
-
                                         <td>
-                                            <img src="public/img/product/<?= $value['images'] ?>" width="100px">
+                                            <img src="public/img/product/<?= $value['images'] ?>"
+                                                width="100px"
+                                                class="car-image"
+                                                style="cursor: pointer;"
+                                                data-merek="<?= $value['merek'] ?>">
                                         </td>
                                         <td>
                                             <a href="index.php?page=mobil/edit&id=<?= $value['id'] ?>">
@@ -97,10 +100,40 @@
         </div>
     </section>
 
+    <!-- Tambahkan Modal untuk Popup Gambar -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">Detail Gambar Mobil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modalImage" src="" alt="Gambar Mobil" style="max-width: 100%; height: auto;">
+                    <p class="mt-2"><i>Gambar Mobil - <span id="modalCarName"></span></i></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </main><!-- End #main -->
 
 <script>
     $(document).ready(function() {
         $('#table-mobil').DataTable();
+
+        // Menangani klik pada gambar
+        $('.car-image').click(function() {
+            // Mendapatkan URL gambar dan merek mobil yang diklik
+            var imageUrl = $(this).attr('src');
+            var carMerek = $(this).data('merek');
+
+            // Mengatur URL gambar dan merek ke dalam modal
+            $('#modalImage').attr('src', imageUrl);
+            $('#modalCarName').text(carMerek);
+
+            // Menampilkan modal
+            $('#imageModal').modal('show');
+        });
     })
 </script>

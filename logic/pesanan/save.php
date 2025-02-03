@@ -14,7 +14,7 @@ $tgl_kembali = $_POST['tgl_kembali'];
 
 
 
-$sql = "INSERT INTO `pesanan` VALUES (NULL, '$id_transaksi', '$kode', '$kode_mobil', (select no_polisi from mobil where kode_mobil = '$kode_mobil'), '$tgl_pinjam','$tgl_kembali',(select harga from mobil where kode_mobil = '$kode_mobil'), (SELECT datediff('$tgl_kembali','$tgl_pinjam') * harga FROM mobil WHERE kode_mobil = '$kode_mobil'))";
+$sql = "INSERT INTO `pesanan` VALUES (NULL, '$id_transaksi', '$kode', '$kode_mobil', (SELECT no_polisi from mobil where kode_mobil = '$kode_mobil'), '$tgl_pinjam','$tgl_kembali',(SELECT harga from mobil where kode_mobil = '$kode_mobil'), (SELECT datediff('$tgl_kembali','$tgl_pinjam') * harga FROM mobil WHERE kode_mobil = '$kode_mobil'))";
 
 if (mysqli_query($koneksi, $sql)) {
     header("Location: ../../index.php?page=transaksi");

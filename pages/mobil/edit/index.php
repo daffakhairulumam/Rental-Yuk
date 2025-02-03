@@ -46,7 +46,7 @@ $data = mysqli_fetch_array($result);
                             </div>
 
                             <div class="form-group mb-3">
-                                <label>Merek</label>
+                                <label>Nama Mobil</label>
                                 <input type="text" name="merek" placeholder="Input Nama Merek" class="form-control" value="<?= $data['merek'] ?>">
                             </div>
 

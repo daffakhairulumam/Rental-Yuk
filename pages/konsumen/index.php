@@ -30,7 +30,7 @@
                         <table class="table table-bordered" id="table-konsumen">
                             <thead>
                                 <tr>
-                                    <!-- <th>No.</th> -->
+                                    <th>No.</th>
                                     <th>Kode Konsumen</th>
                                     <th>Email</th>
                                     <th>NIK</th>
@@ -52,7 +52,7 @@
 
                                 foreach ($data as $key => $value) { ?>
                                     <tr>
-                                        <!-- <td><?= $key + 1 ?></td> -->
+                                        <td><?= $key + 1 ?></td>
                                         <td><?= $value['kode_konsumen'] ?></td>
                                         <td><?= $value['email'] ?></td>
                                         <td><?= $value['nik'] ?></td>

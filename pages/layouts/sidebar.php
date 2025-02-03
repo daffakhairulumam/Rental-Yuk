@@ -70,7 +70,7 @@ if ($page == 'dashboard') {
           </a>
         </li>
       </ul>
-    </li><!-- End Master Nav -->
+    </li>
     <!-- End Transaksi Nav -->
 
     <!-- <li class="nav-item">

@@ -85,7 +85,7 @@ function getTransaksi($idTransaksi = null)
 
                         <div class="row mb-3">
                             <div class="col-md-3">
-                                <label class="form-label">Tanggal Awal</label> 
+                                <label class="form-label">Tanggal Awal</label>
                                 <input type="date" id="min" name="min" class="form-control">
                             </div>
                             <div class="col-md-3">
@@ -164,7 +164,8 @@ function getTransaksi($idTransaksi = null)
                                         </td>
                                         <td><?= $value['no_polisi'] ?></td>
                                         <!-- <td><?= $value['merek'] ?></td> -->
-                                        <td><?= $value['tanggal_transaksi'] ?></td>
+                                        <!-- <td><?= $value['tanggal_transaksi'] ?></td> -->
+                                        <td><?= date('d-m-Y', strtotime($value['tanggal_transaksi'])) ?></td>
                                         <!-- <td><?= $value['tgl_pinjam'] ?></td>
                                         <td><?= $value['tgl_kembali'] ?></td> -->
                                         <td><?= $hargaMobilFormatted ?></td>
@@ -266,35 +267,46 @@ function getTransaksi($idTransaksi = null)
 
 <script>
     $(document).ready(function() {
-        // Initialize DataTable with date sorting
+
         var table = $('#table-transaksi').DataTable({
             columnDefs: [{
-                // Target the date column (index 5 - Tanggal Transaksi)
-                targets: 5,
-                type: 'date-dd-mm-yyyy'
+                targets: 6,
+                type: 'date'
             }]
         });
 
         // Custom date range filtering function
         $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-            var min = $('#min').val() ? moment($('#min').val(), 'YYYY-MM-DD') : null;
-            var max = $('#max').val() ? moment($('#max').val(), 'YYYY-MM-DD') : null;
+            var min = $('#min').val();
+            var max = $('#max').val();
 
-            // Parse the date from the table (DD-MM-YYYY format)
-            var dateStr = data[5];
-            var date = moment(dateStr, 'DD-MM-YYYY');
+            // Get date from the table
+            var dateStr = data[6]; // index 6 adalah kolom Tanggal Transaksi
 
-            // If no filter is set, show all rows
-            if ((!min && !max) || !date.isValid()) {
+            // Convert date string to Date object
+            var dateParts = dateStr.split('-');
+            var date = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+            date.setHours(0, 0, 0, 0); // Set waktu ke 00:00:00
+
+            // Convert input dates to Date objects and set appropriate times
+            var minDate = min ? new Date(min) : null;
+            var maxDate = max ? new Date(max) : null;
+
+            if (minDate) minDate.setHours(0, 0, 0, 0); // Set waktu awal ke 00:00:00
+            if (maxDate) maxDate.setHours(23, 59, 59, 999); // Set waktu akhir ke 23:59:59
+
+            // If no filter is set
+            if (!min && !max) {
                 return true;
             }
 
             // Check if date is within the selected range
-            if (min && !date.isSameOrAfter(min)) {
-                return false;
-            }
-            if (max && !date.isSameOrBefore(max)) {
-                return false;
+            if (minDate && maxDate) {
+                return date.getTime() >= minDate.getTime() && date.getTime() <= maxDate.getTime();
+            } else if (minDate) {
+                return date.getTime() >= minDate.getTime();
+            } else if (maxDate) {
+                return date.getTime() <= maxDate.getTime();
             }
 
             return true;
@@ -310,6 +322,21 @@ function getTransaksi($idTransaksi = null)
             $('#min').val('');
             $('#max').val('');
             table.draw();
+        });
+
+        // Modify the Excel export button click handler
+        $('.btn-success').click(function(e) {
+            e.preventDefault();
+            var startDate = $('#min').val();
+            var endDate = $('#max').val();
+            var url = 'logic/detail-laporan/xlshtml.php';
+
+            // Add date parameters if they exist
+            if (startDate && endDate) {
+                url += '?start_date=' + startDate + '&end_date=' + endDate;
+            }
+
+            window.location.href = url;
         });
 
         // Handle click on customer code
